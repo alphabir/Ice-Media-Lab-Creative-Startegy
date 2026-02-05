@@ -7,7 +7,7 @@ interface EmployeeDirectoryProps {
 }
 
 const EmployeeDirectory: React.FC<EmployeeDirectoryProps> = ({ onSelectEmployee }) => {
-  const users = storageService.getUsers();
+  const users = storageService.getAllUsers();
 
   return (
     <div className="max-w-5xl mx-auto py-12 space-y-8 animate-in fade-in duration-500">

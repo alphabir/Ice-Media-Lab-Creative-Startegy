@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { User } from '../types';
+import Logo from './Logo';
 
 interface HeaderProps {
   user: User;
@@ -18,26 +18,13 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, onViewProfile, onViewDi
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div 
-            className="flex items-center gap-3 cursor-pointer group"
+            className="flex items-center gap-4 cursor-pointer group"
             onClick={onHome}
           >
-            <div className="h-10 w-auto flex items-center">
-              <img 
-                src="logo.png" 
-                alt="Ice Media Lab" 
-                className="h-full object-contain group-hover:scale-105 transition-transform" 
-                onError={(e) => {
-                  (e.target as any).style.display = 'none';
-                  (e.target as any).nextSibling.style.display = 'flex';
-                }}
-              />
-              <div className="hidden w-10 h-10 bg-[#1bb0bd] rounded-lg flex items-center justify-center font-bold text-white shadow-lg">
-                I
-              </div>
-            </div>
-            <div className="flex flex-col -space-y-1 pr-4 border-r border-slate-800">
-              <span className="text-lg font-black tracking-tight text-white uppercase italic">Ice Media Lab</span>
-              <span className="text-[9px] font-black text-[#f6b21b] tracking-[0.2em] uppercase pl-1">Intelligence Hub</span>
+            <Logo className="h-14" variant="full" />
+            <div className="hidden lg:flex flex-col -space-y-1 pl-4 border-l border-slate-800">
+              <span className="text-[10px] font-black text-[#f6b21b] tracking-[0.2em] uppercase">Intelligence Suite</span>
+              <span className="text-[9px] font-black text-slate-600 tracking-widest uppercase">v2.5.0-PRV</span>
             </div>
           </div>
           
@@ -61,10 +48,11 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, onViewProfile, onViewDi
               </button>
 
               {isMenuOpen && (
-                <div className="absolute right-0 mt-4 w-56 bg-[#0f172a] border border-slate-700/50 rounded-2xl shadow-2xl py-2 animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-white/5">
-                  <div className="px-4 py-2 border-b border-slate-800 mb-2">
-                    <p className="text-[10px] text-slate-500 font-black uppercase mb-1">Authenticated As</p>
+                <div className="absolute right-0 mt-4 w-64 bg-[#0f172a] border border-slate-700/50 rounded-2xl shadow-2xl py-2 animate-in fade-in slide-in-from-top-2 duration-200 ring-1 ring-white/5">
+                  <div className="px-4 py-3 border-b border-slate-800 mb-2">
+                    <p className="text-[10px] text-slate-500 font-black uppercase mb-1">Active Credentials</p>
                     <p className="text-xs text-white font-bold">{user.fullName}</p>
+                    <p className="text-[10px] text-[#1bb0bd] font-bold mt-1 uppercase">{user.department}</p>
                   </div>
                   <button 
                     onClick={() => { onViewProfile(); setIsMenuOpen(false); }}
@@ -73,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout, onViewProfile, onViewDi
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    Organization Profile
+                    Corporate Profile
                   </button>
                   <button 
                     onClick={() => { onLogout(); setIsMenuOpen(false); }}
