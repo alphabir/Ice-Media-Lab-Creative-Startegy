@@ -1,23 +1,36 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { AdAnalysisInput, AdIntelligenceReport } from "../types";
 import { SYSTEM_INSTRUCTION, REPORT_PROMPT } from "../constants";
 
 export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<AdIntelligenceReport> => {
   const apiKey = process.env.API_KEY;
-  if (!apiKey || apiKey === 'undefined') throw new Error("API Key missing.");
+  if (!apiKey || apiKey === 'undefined') {
+    throw new Error("VARTA CRITICAL: No API key detected. Connect corporate credentials.");
+  }
 
+  // Use Gemini 3 Pro for complex strategy tasks to ensure depth and reasoning
   const ai = new GoogleGenAI({ apiKey });
   
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-3-pro-preview',
       contents: [{ parts: [{ text: REPORT_PROMPT(input) }] }],
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }],
+        thinkingConfig: {
+          // Max budget for 3-pro to ensure it plans the full 9-point report before generating
+          thinkingBudget: 32768 
+        },
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
+          required: [
+            "marketIntelligence", "audiencePsychology", "competitorReport", 
+            "positioningStrategy", "contentStrategy", "funnelBlueprint", 
+            "executionPlaybook", "metrics", "frameworkAnalysis"
+          ],
           properties: {
             marketIntelligence: {
               type: Type.OBJECT,
@@ -112,18 +125,23 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
     });
 
     const text = response.text;
-    if (!text) throw new Error("Empty response from VARTA Node.");
+    if (!text) throw new Error("VARTA SIGNAL LOST: The intelligence node failed to respond. Check keyword safety.");
     
+    const jsonStr = text.replace(/```json\n?|```/g, "").trim();
+    const parsedData = JSON.parse(jsonStr);
+
     const sources: { title: string; url: string }[] = [];
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
     chunks.forEach((chunk: any) => {
-      if (chunk.web) sources.push({ title: chunk.web.title || 'Live Signal', url: chunk.web.uri });
+      if (chunk.web) sources.push({ title: chunk.web.title || 'Market Source', url: chunk.web.uri });
     });
 
-    const parsedData = JSON.parse(text);
     return { ...parsedData, sources };
   } catch (error: any) {
-    if (error.message?.includes('429')) throw new Error("QUOTA_EXHAUSTED: Please establish a private corporate connection.");
-    throw new Error(error.message || "VARTA Intelligence connection failure.");
+    console.error("VARTA_CORE_ERROR:", error);
+    if (error.message?.includes('429')) {
+      throw new Error("NODE_OVERLOAD: Too many concurrent strategy requests. Link a paid API key to bypass.");
+    }
+    throw new Error(error.message || "VARTA Connection Failure.");
   }
 };
