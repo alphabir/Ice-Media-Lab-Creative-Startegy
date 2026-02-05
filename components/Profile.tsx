@@ -6,9 +6,18 @@ interface ProfileProps {
   isOwnProfile?: boolean;
   onViewReport: (report: AdIntelligenceReport) => void;
   onBack: () => void;
+  onSelectKey?: () => void;
+  hasOwnKey?: boolean;
 }
 
-const Profile: React.FC<ProfileProps> = ({ user, isOwnProfile = false, onViewReport, onBack }) => {
+const Profile: React.FC<ProfileProps> = ({ 
+  user, 
+  isOwnProfile = false, 
+  onViewReport, 
+  onBack,
+  onSelectKey,
+  hasOwnKey = false
+}) => {
   return (
     <div className="max-w-5xl mx-auto py-12 space-y-12 animate-in fade-in duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-800 pb-8 gap-6">
@@ -71,6 +80,34 @@ const Profile: React.FC<ProfileProps> = ({ user, isOwnProfile = false, onViewRep
           </div>
         </div>
       </div>
+
+      {isOwnProfile && onSelectKey && (
+        <div className="bg-slate-900/60 border border-slate-800 p-8 rounded-[32px] flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#f6b21b]" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              Organizational Quota Management
+            </h3>
+            <p className="text-sm text-slate-400 max-w-xl leading-relaxed">
+              To avoid environment-wide rate limits, link your corporate Google Cloud Project. This ensures consistent access to the high-performance Intelligence Node.
+            </p>
+            {hasOwnKey && (
+              <div className="flex items-center gap-2 text-emerald-400 text-[10px] font-black uppercase tracking-widest mt-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Connection Established: Private Corporate Project
+              </div>
+            )}
+          </div>
+          <button 
+            onClick={onSelectKey}
+            className="whitespace-nowrap px-8 py-4 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 hover:border-[#1bb0bd]/40 rounded-2xl text-[#1bb0bd] text-xs font-black uppercase tracking-widest transition-all shadow-xl"
+          >
+            {hasOwnKey ? 'Switch Connection' : 'Establish Corporate Link'}
+          </button>
+        </div>
+      )}
 
       <div className="space-y-6">
         <div className="flex items-center gap-3">

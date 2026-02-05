@@ -5,71 +5,68 @@ export interface AdAnalysisInput {
   rawAdText?: string;
 }
 
-export interface DemographicRow {
-  regionType: string;
-  locations: string;
-  ageGroup: string;
-  language: string;
-  culturalTone: string;
-  purchaseTrigger: string;
-}
-
-export interface CompetitorInsight {
-  brandName: string;
-  marketShare: string;
-  primaryStrategy: string;
-  winningCreativeStyle: string;
-  estimatedAOV: string;
-}
-
-export interface CampaignPattern {
-  platform: string;
-  format: string;
-  hookType: string;
-  performanceRating: 'High' | 'Medium' | 'Low';
-  reasoning: string;
-}
-
 export interface AdIntelligenceReport {
   id: string;
   timestamp: number;
   input: AdAnalysisInput;
-  executiveSummary: {
-    meaning: string;
-    whatIsWorking: string;
+  
+  marketIntelligence: {
+    industryInsights: string;
+    demandPatterns: string;
+    winningFormats: string[];
   };
-  keywordInterpretation: {
-    culturalMeaning: string;
-    emotionalAssociations: string[];
-    scenarios: string[];
+  
+  audiencePsychology: {
+    corePains: string[];
+    emotionalTriggers: string[];
+    objections: string[];
+    decisionDrivers: string[];
   };
-  demographics: DemographicRow[];
-  competitors: CompetitorInsight[];
-  performingCampaigns: CampaignPattern[];
-  creativePatterns: {
-    topHooks: string[];
-    visualStyles: string;
-    copyTone: string;
+  
+  competitorReport: {
+    brandName: string;
+    strategy: string;
+    weaknesses: string;
+  }[];
+  
+  positioningStrategy: {
+    statement: string;
+    whyThisWins: string;
+    howItStandsOut: string;
   };
-  audienceComparison: {
-    genZProfile: string;
-    massProfile: string;
-    dosAndDonts: { audience: string; dos: string[]; donts: string[] }[];
+  
+  contentStrategy: {
+    platformPlan: string;
+    framework30Day: string;
+    viralAngles: string[];
   };
-  brandStrategy: {
-    legacyApproach: string;
-    fmcgTips: string;
-    pitfalls: string;
+  
+  funnelBlueprint: {
+    flow: string;
+    leadCaptureLogic: string;
+    nurtureStrategy: string;
   };
-  actionableAssets: {
-    copyFrameworks: string[];
-    reelHooks: string[];
-    messagingAngles: string[];
+  
+  executionPlaybook: {
+    reelIdeas: { hook: string; idea: string }[];
+    adAngles: string[];
+    lpHeadline: string;
+    lpSubhead: string;
+    ctas: string[];
+    weeklyActions: string[];
   };
-  trendAlerts: {
-    opportunities: string[];
-    saturationWarnings: string[];
+  
+  metrics: {
+    track: string[];
+    successDefinition: string;
+    warningSigns: string[];
   };
+
+  frameworkAnalysis: {
+    appliedFramework: string;
+    whyUsed: string;
+  };
+  
   sources?: { title: string; url: string }[];
 }
 
@@ -80,9 +77,4 @@ export interface User {
   department: string;
   joinedDate: number;
   analysisHistory: AdIntelligenceReport[];
-}
-
-export type AuthState = {
-  isAuthenticated: boolean;
-  currentUser: User | null;
 }

@@ -7,197 +7,279 @@ interface ReportDashboardProps {
 
 const ReportDashboard: React.FC<ReportDashboardProps> = ({ report }) => {
   const {
-    executiveSummary = { meaning: '', whatIsWorking: '' },
-    demographics = [],
-    competitors = [],
-    performingCampaigns = [],
-    creativePatterns = { topHooks: [], visualStyles: '', copyTone: '' },
-    audienceComparison = { genZProfile: '', massProfile: '', dosAndDonts: [] },
-    actionableAssets = { copyFrameworks: [], reelHooks: [], messagingAngles: [] },
+    marketIntelligence,
+    audiencePsychology,
+    competitorReport,
+    positioningStrategy,
+    contentStrategy,
+    funnelBlueprint,
+    executionPlaybook,
+    metrics,
+    frameworkAnalysis,
     sources = []
   } = report;
 
+  const Badge = ({ children, color = "blue" }: { children: React.ReactNode; color?: string }) => (
+    <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+      color === 'blue' ? 'bg-cyan-500/10 text-cyan-400' : 
+      color === 'orange' ? 'bg-orange-500/10 text-orange-400' :
+      'bg-emerald-500/10 text-emerald-400'
+    }`}>
+      {children}
+    </span>
+  );
+
   return (
     <div className="space-y-12 pb-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
-      {/* Executive Summary */}
-      <section className="bg-slate-800/40 border border-slate-700/60 p-8 rounded-[32px] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#1bb0bd]/5 rounded-full blur-[80px] -mr-32 -mt-32"></div>
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-[#1bb0bd]/20 rounded-lg">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#1bb0bd]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-white tracking-tight">Intelligence Briefing</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-3">
-              <h3 className="text-xs font-black text-[#1bb0bd] uppercase tracking-widest">Market Environment</h3>
-              <p className="text-slate-300 leading-relaxed text-sm">{executiveSummary.meaning}</p>
-            </div>
-            <div className="space-y-3">
-              <h3 className="text-xs font-black text-[#f6b21b] uppercase tracking-widest">Growth Signals</h3>
-              <p className="text-slate-300 leading-relaxed text-sm">{executiveSummary.whatIsWorking}</p>
-            </div>
-          </div>
+      
+      {/* 0. Framework Rationale (The Strategy Why) */}
+      <section className="bg-gradient-to-r from-slate-900 to-slate-800 border-l-4 border-[#f6b21b] p-6 rounded-r-2xl">
+        <div className="flex items-center gap-3 mb-2">
+          <Badge color="orange">Strategic Framework Applied</Badge>
+          <h2 className="text-xl font-black text-white">{frameworkAnalysis.appliedFramework}</h2>
         </div>
+        <p className="text-sm text-slate-400 italic">"Why this framework? {frameworkAnalysis.whyUsed}"</p>
       </section>
 
-      {/* Competitor Analysis */}
-      <section className="space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="w-1.5 h-6 bg-rose-500 rounded-full"></div>
-          <h3 className="text-2xl font-bold text-white tracking-tight">Competitor Intelligence</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {competitors.map((comp, i) => (
-            <div key={i} className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl hover:border-rose-500/40 transition-all group relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-rose-500/5 rounded-full blur-2xl -mr-16 -mt-16"></div>
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-4">
-                  <h4 className="font-bold text-white text-lg">{comp.brandName}</h4>
-                  <span className="text-[10px] font-black bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded uppercase">{comp.marketShare} Share</span>
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Primary Strategy</div>
-                    <p className="text-xs text-slate-300 leading-relaxed">{comp.primaryStrategy}</p>
-                  </div>
-                  <div className="pt-4 border-t border-slate-800 flex justify-between items-center">
-                    <span className="text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Winning Style: <span className="text-white">{comp.winningCreativeStyle}</span></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Campaign Benchmarks */}
-      <section className="bg-slate-900/40 border border-slate-800 p-8 rounded-[40px]">
-        <div className="flex items-center justify-between mb-10">
-          <h3 className="text-xl font-bold text-white flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-400" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
-              </svg>
-            </div>
-            High-Performing Ad Patterns
+      {/* 1. Market Intelligence */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 bg-slate-900/60 border border-slate-800 p-8 rounded-[32px]">
+          <h3 className="text-white font-bold text-lg mb-4 flex items-center gap-2">
+            🔍 Market Intelligence Summary
           </h3>
-          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] border border-slate-800 px-4 py-1.5 rounded-full">Real-time Benchmarking</span>
+          <div className="space-y-6">
+            <div>
+              <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Industry Insights</p>
+              <p className="text-sm text-slate-300 leading-relaxed">{marketIntelligence.industryInsights}</p>
+            </div>
+            <div>
+              <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Demand Patterns</p>
+              <p className="text-sm text-slate-300 leading-relaxed">{marketIntelligence.demandPatterns}</p>
+            </div>
+          </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {performingCampaigns.map((camp, i) => (
-            <div key={i} className="bg-slate-800/20 border border-slate-700/40 p-6 rounded-2xl relative transition-all hover:bg-slate-800/40">
-              <div className={`absolute top-4 right-4 text-[9px] font-black px-2 py-0.5 rounded uppercase tracking-widest ${
-                camp.performanceRating === 'High' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-[#f6b21b]/10 text-[#f6b21b]'
-              }`}>
-                {camp.performanceRating} ROI
+        <div className="bg-slate-800/20 border border-slate-800 p-8 rounded-[32px]">
+          <p className="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Winning Formats</p>
+          <div className="space-y-2">
+            {marketIntelligence.winningFormats.map((f, i) => (
+              <div key={i} className="flex items-center gap-3 text-white text-sm">
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-500"></div>
+                {f}
               </div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-[#1bb0bd] font-black border border-slate-800">
-                  {camp.platform.substring(0,2).toUpperCase()}
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-sm">{camp.format}</h4>
-                  <p className="text-[10px] text-slate-500 font-bold uppercase">{camp.hookType}</p>
-                </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Audience Psychology */}
+      <section className="bg-slate-900/40 border border-slate-800 p-8 rounded-[40px]">
+        <h3 className="text-white font-bold text-lg mb-8">🧠 Audience Psychology Breakdown</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            { label: 'Core Pains', data: audiencePsychology.corePains, color: 'rose' },
+            { label: 'Emotional Triggers', data: audiencePsychology.emotionalTriggers, color: 'cyan' },
+            { label: 'Objections', data: audiencePsychology.objections, color: 'orange' },
+            { label: 'Decision Drivers', data: audiencePsychology.decisionDrivers, color: 'emerald' }
+          ].map((item, idx) => (
+            <div key={idx} className="space-y-3">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{item.label}</p>
+              <div className="space-y-2">
+                {item.data.map((point, i) => (
+                  <p key={i} className="text-xs text-slate-400 flex items-start gap-2">
+                    <span className="mt-1 w-1 h-1 rounded-full bg-slate-600 shrink-0"></span>
+                    {point}
+                  </p>
+                ))}
               </div>
-              <p className="text-xs text-slate-400 leading-relaxed border-t border-slate-700/40 pt-4">{camp.reasoning}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Demographic Matrix */}
-      <section className="overflow-hidden bg-slate-800/40 border border-slate-700/60 rounded-[32px]">
-        <div className="p-8 border-b border-slate-700/60 bg-slate-900/40 flex justify-between items-center">
-          <div>
-            <h3 className="text-xl font-bold text-white">Target Demographic Matrix</h3>
-            <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-black">Meta Platform Audience Signals</p>
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-900/60 text-[10px] font-black text-slate-400 uppercase tracking-[0.15em]">
-              <tr>
-                <th className="px-8 py-5">Tier Segment</th>
-                <th className="px-6 py-5">Core Geographies</th>
-                <th className="px-6 py-5">Age & Language</th>
-                <th className="px-6 py-5">Trigger Pulse</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm text-slate-300 divide-y divide-slate-700/40">
-              {demographics.map((row, i) => (
-                <tr key={i} className="hover:bg-[#1bb0bd]/5 transition-colors group">
-                  <td className="px-8 py-6 font-bold text-white group-hover:text-[#1bb0bd]">{row.regionType}</td>
-                  <td className="px-6 py-6 text-xs">{row.locations}</td>
-                  <td className="px-6 py-6">
-                    <div className="flex flex-col">
-                      <span className="font-bold text-white text-xs">{row.ageGroup}</span>
-                      <span className="text-[10px] text-slate-500 font-bold uppercase mt-0.5">{row.language}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-6">
-                    <span className="px-3 py-1 bg-[#1bb0bd]/10 text-[#1bb0bd] rounded-lg text-[10px] font-black uppercase tracking-tight">
-                      {row.purchaseTrigger}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* 3. Competitor Intelligence */}
+      <section className="space-y-6">
+        <h3 className="text-white font-bold text-lg flex items-center gap-2">⚔️ Competitor Intelligence Report</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {competitorReport.map((comp, i) => (
+            <div key={i} className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl relative group overflow-hidden">
+              <div className="absolute top-0 right-0 w-2 h-full bg-rose-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <h4 className="font-bold text-white mb-2">{comp.brandName}</h4>
+              <p className="text-xs text-slate-400 mb-4 leading-relaxed"><span className="text-rose-400 font-bold uppercase text-[9px]">Strategy:</span> {comp.strategy}</p>
+              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl">
+                <p className="text-[9px] font-black text-rose-500 uppercase tracking-widest mb-1">Gap/Weakness</p>
+                <p className="text-[10px] text-slate-300 italic">"{comp.weaknesses}"</p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Actionable Assets */}
+      {/* 4. Positioning & 5. Content Strategy */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-slate-900/40 p-8 rounded-[32px] border border-slate-800">
-          <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#1bb0bd]"></span>
-            Winning Reel Hooks
-          </h4>
-          <div className="space-y-4">
-            {actionableAssets.reelHooks.map((h, i) => (
-              <div key={i} className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-2xl text-xs text-slate-200 leading-relaxed group hover:border-[#1bb0bd]/40 transition-colors">
-                <span className="text-[#1bb0bd] font-black mr-2">#{i+1}</span>
-                "{h}"
+        <div className="bg-cyan-500/5 border border-cyan-500/20 p-8 rounded-[32px]">
+          <h3 className="text-white font-bold text-lg mb-6">🧩 Positioning & Differentiation</h3>
+          <div className="space-y-6">
+            <div className="p-4 bg-slate-900 rounded-2xl border border-slate-800">
+              <p className="text-[10px] font-black text-cyan-500 uppercase tracking-widest mb-2">Unique Positioning Statement</p>
+              <p className="text-sm text-white font-medium italic">"{positioningStrategy.statement}"</p>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Why This Wins</p>
+                <p className="text-xs text-slate-400">{positioningStrategy.whyThisWins}</p>
               </div>
-            ))}
+              <div>
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">How It Stands Out</p>
+                <p className="text-xs text-slate-400">{positioningStrategy.howItStandsOut}</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="bg-slate-900/40 p-8 rounded-[32px] border border-slate-800">
-          <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#f6b21b]"></span>
-            Hinglish Copy Angles
-          </h4>
-          <div className="space-y-4">
-            {actionableAssets.messagingAngles.map((a, i) => (
-              <div key={i} className="p-4 bg-slate-800/40 border border-slate-700/60 rounded-2xl text-xs text-slate-200 leading-relaxed group hover:border-[#f6b21b]/40 transition-colors">
-                {a}
-              </div>
-            ))}
+        <div className="bg-slate-900 border border-slate-800 p-8 rounded-[32px]">
+          <h3 className="text-white font-bold text-lg mb-6">📣 Content & Distribution Strategy</h3>
+          <div className="space-y-6">
+            <div>
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Platform-wise Plan</p>
+              <p className="text-xs text-slate-300">{contentStrategy.platformPlan}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">30-Day Content Framework</p>
+              <p className="text-xs text-slate-300 p-3 bg-slate-800 rounded-xl leading-relaxed">{contentStrategy.framework30Day}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {contentStrategy.viralAngles.map((angle, i) => (
+                <span key={i} className="text-[9px] font-black text-cyan-400 bg-cyan-500/10 px-2 py-1 rounded uppercase">
+                  ⚡ {angle}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Intelligence Sources */}
+      {/* 6. Funnel Blueprint */}
+      <section className="bg-slate-900 border border-slate-800 p-8 rounded-[40px]">
+        <h3 className="text-white font-bold text-lg mb-6">🔄 Funnel & Conversion Blueprint</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="space-y-2">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Awareness → Trust → Conversion</p>
+            <p className="text-xs text-slate-300">{funnelBlueprint.flow}</p>
+          </div>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Lead Capture Logic</p>
+            <p className="text-xs text-slate-300">{funnelBlueprint.leadCaptureLogic}</p>
+          </div>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Nurture Strategy</p>
+            <p className="text-xs text-slate-300">{funnelBlueprint.nurtureStrategy}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Execution Playbook */}
+      <section className="space-y-8">
+        <h3 className="text-3xl font-black text-white flex items-center gap-4">
+          🚀 Execution Playbook
+          <Badge color="emerald">Immediate Action Items</Badge>
+        </h3>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Reel Ideas */}
+          <div className="space-y-4">
+            <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">10 High-Velocity Reel Ideas</p>
+            <div className="grid grid-cols-1 gap-3">
+              {executionPlaybook.reelIdeas.map((reel, i) => (
+                <div key={i} className="p-4 bg-slate-900 border border-slate-800 rounded-2xl group hover:border-cyan-500/40 transition-all">
+                  <div className="flex gap-4">
+                    <span className="text-xl font-black text-slate-800 group-hover:text-cyan-500/20 transition-colors">{(i+1).toString().padStart(2, '0')}</span>
+                    <div>
+                      <p className="text-xs font-black text-cyan-400 uppercase tracking-widest mb-1 italic">Hook: "{reel.hook}"</p>
+                      <p className="text-xs text-slate-300 leading-relaxed">{reel.idea}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-8">
+            {/* Ad Angles */}
+            <div className="space-y-4">
+              <p className="text-[11px] font-black text-slate-500 uppercase tracking-[0.3em]">5 Strategic Ad Angles</p>
+              <div className="space-y-3">
+                {executionPlaybook.adAngles.map((angle, i) => (
+                  <div key={i} className="p-4 bg-slate-800/20 border-l-2 border-emerald-500 rounded-r-2xl">
+                    <p className="text-xs text-slate-200">{angle}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Landing Page */}
+            <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
+              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Direct Response Landing Page</p>
+              <h4 className="text-xl font-bold text-white mb-2 underline decoration-cyan-500 underline-offset-4">{executionPlaybook.lpHeadline}</h4>
+              <p className="text-sm text-slate-400 mb-6">{executionPlaybook.lpSubhead}</p>
+              <div className="flex flex-wrap gap-2">
+                {executionPlaybook.ctas.map((cta, i) => (
+                  <button key={i} className="px-4 py-2 bg-cyan-500 text-white text-[10px] font-black uppercase tracking-widest rounded-lg">
+                    {cta}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Weekly Actions */}
+            <div className="bg-emerald-500/5 border border-emerald-500/20 p-6 rounded-3xl">
+              <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-4">Weekly Growth Cadence</p>
+              <ul className="space-y-2">
+                {executionPlaybook.weeklyActions.map((action, i) => (
+                  <li key={i} className="text-xs text-slate-300 flex items-center gap-3">
+                    <span className="w-1 h-1 bg-emerald-500 rounded-full"></span>
+                    {action}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Metrics & KPIs */}
+      <section className="bg-slate-950 border border-slate-800 p-10 rounded-[48px]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div>
+            <h5 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Primary Metrics</h5>
+            <div className="space-y-2">
+              {metrics.track.map((m, i) => (
+                <p key={i} className="text-xs text-white font-medium">• {m}</p>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h5 className="text-[11px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Success Milestone</h5>
+            <p className="text-sm text-cyan-400 font-bold leading-relaxed">{metrics.successDefinition}</p>
+          </div>
+          <div>
+            <h5 className="text-[11px] font-black text-rose-500 uppercase tracking-[0.2em] mb-4">Early Warning Signs</h5>
+            <div className="space-y-2">
+              {metrics.warningSigns.map((w, i) => (
+                <div key={i} className="text-[10px] text-rose-400/80 bg-rose-500/5 px-3 py-1.5 rounded-lg border border-rose-500/10">
+                  {w}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sources */}
       {sources.length > 0 && (
-        <section className="pt-12 border-t border-slate-800/60">
-          <h4 className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-6">Intelligence Node Verification</h4>
+        <section className="pt-12 border-t border-slate-800">
+          <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-6">VARTA Node Intelligence Verification</p>
           <div className="flex flex-wrap gap-3">
             {sources.map((src, i) => (
-              <a 
-                key={i} 
-                href={src.url} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="px-4 py-2 bg-slate-900/80 border border-slate-800 rounded-xl text-[10px] text-[#1bb0bd] hover:border-[#1bb0bd] transition-all flex items-center gap-2 group"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-50 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
+              <a key={i} href={src.url} target="_blank" rel="noopener" className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-[10px] text-cyan-500 hover:border-cyan-500 transition-all flex items-center gap-2">
                 {src.title}
               </a>
             ))}

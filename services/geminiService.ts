@@ -4,16 +4,13 @@ import { SYSTEM_INSTRUCTION, REPORT_PROMPT } from "../constants";
 
 export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<AdIntelligenceReport> => {
   const apiKey = process.env.API_KEY;
-  
-  if (!apiKey || apiKey === 'undefined') {
-    throw new Error("API Key is missing. Please ensure the API_KEY environment variable is set.");
-  }
+  if (!apiKey || apiKey === 'undefined') throw new Error("API Key missing.");
 
   const ai = new GoogleGenAI({ apiKey });
   
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-3-flash-preview',
       contents: [{ parts: [{ text: REPORT_PROMPT(input) }] }],
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -22,110 +19,91 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            executiveSummary: {
+            marketIntelligence: {
               type: Type.OBJECT,
               properties: {
-                meaning: { type: Type.STRING },
-                whatIsWorking: { type: Type.STRING }
-              },
-              required: ["meaning", "whatIsWorking"]
-            },
-            keywordInterpretation: {
-              type: Type.OBJECT,
-              properties: {
-                culturalMeaning: { type: Type.STRING },
-                emotionalAssociations: { type: Type.ARRAY, items: { type: Type.STRING } },
-                scenarios: { type: Type.ARRAY, items: { type: Type.STRING } }
-              },
-              required: ["culturalMeaning", "emotionalAssociations", "scenarios"]
-            },
-            demographics: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  regionType: { type: Type.STRING },
-                  locations: { type: Type.STRING },
-                  ageGroup: { type: Type.STRING },
-                  language: { type: Type.STRING },
-                  culturalTone: { type: Type.STRING },
-                  purchaseTrigger: { type: Type.STRING }
-                }
+                industryInsights: { type: Type.STRING },
+                demandPatterns: { type: Type.STRING },
+                winningFormats: { type: Type.ARRAY, items: { type: Type.STRING } }
               }
             },
-            competitors: {
+            audiencePsychology: {
+              type: Type.OBJECT,
+              properties: {
+                corePains: { type: Type.ARRAY, items: { type: Type.STRING } },
+                emotionalTriggers: { type: Type.ARRAY, items: { type: Type.STRING } },
+                objections: { type: Type.ARRAY, items: { type: Type.STRING } },
+                decisionDrivers: { type: Type.ARRAY, items: { type: Type.STRING } }
+              }
+            },
+            competitorReport: {
               type: Type.ARRAY,
               items: {
                 type: Type.OBJECT,
                 properties: {
                   brandName: { type: Type.STRING },
-                  marketShare: { type: Type.STRING },
-                  primaryStrategy: { type: Type.STRING },
-                  winningCreativeStyle: { type: Type.STRING },
-                  estimatedAOV: { type: Type.STRING }
+                  strategy: { type: Type.STRING },
+                  weaknesses: { type: Type.STRING }
                 }
               }
             },
-            performingCampaigns: {
-              type: Type.ARRAY,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  platform: { type: Type.STRING },
-                  format: { type: Type.STRING },
-                  hookType: { type: Type.STRING },
-                  performanceRating: { type: Type.STRING },
-                  reasoning: { type: Type.STRING }
-                }
-              }
-            },
-            creativePatterns: {
+            positioningStrategy: {
               type: Type.OBJECT,
               properties: {
-                topHooks: { type: Type.ARRAY, items: { type: Type.STRING } },
-                visualStyles: { type: Type.STRING },
-                copyTone: { type: Type.STRING }
+                statement: { type: Type.STRING },
+                whyThisWins: { type: Type.STRING },
+                howItStandsOut: { type: Type.STRING }
               }
             },
-            audienceComparison: {
+            contentStrategy: {
               type: Type.OBJECT,
               properties: {
-                genZProfile: { type: Type.STRING },
-                massProfile: { type: Type.STRING },
-                dosAndDonts: {
+                platformPlan: { type: Type.STRING },
+                framework30Day: { type: Type.STRING },
+                viralAngles: { type: Type.ARRAY, items: { type: Type.STRING } }
+              }
+            },
+            funnelBlueprint: {
+              type: Type.OBJECT,
+              properties: {
+                flow: { type: Type.STRING },
+                leadCaptureLogic: { type: Type.STRING },
+                nurtureStrategy: { type: Type.STRING }
+              }
+            },
+            executionPlaybook: {
+              type: Type.OBJECT,
+              properties: {
+                reelIdeas: {
                   type: Type.ARRAY,
                   items: {
                     type: Type.OBJECT,
                     properties: {
-                      audience: { type: Type.STRING },
-                      dos: { type: Type.ARRAY, items: { type: Type.STRING } },
-                      donts: { type: Type.ARRAY, items: { type: Type.STRING } }
+                      hook: { type: Type.STRING },
+                      idea: { type: Type.STRING }
                     }
                   }
-                }
+                },
+                adAngles: { type: Type.ARRAY, items: { type: Type.STRING } },
+                lpHeadline: { type: Type.STRING },
+                lpSubhead: { type: Type.STRING },
+                ctas: { type: Type.ARRAY, items: { type: Type.STRING } },
+                weeklyActions: { type: Type.ARRAY, items: { type: Type.STRING } }
               }
             },
-            brandStrategy: {
+            metrics: {
               type: Type.OBJECT,
               properties: {
-                legacyApproach: { type: Type.STRING },
-                fmcgTips: { type: Type.STRING },
-                pitfalls: { type: Type.STRING }
+                track: { type: Type.ARRAY, items: { type: Type.STRING } },
+                successDefinition: { type: Type.STRING },
+                warningSigns: { type: Type.ARRAY, items: { type: Type.STRING } }
               }
             },
-            actionableAssets: {
+            frameworkAnalysis: {
               type: Type.OBJECT,
               properties: {
-                copyFrameworks: { type: Type.ARRAY, items: { type: Type.STRING } },
-                reelHooks: { type: Type.ARRAY, items: { type: Type.STRING } },
-                messagingAngles: { type: Type.ARRAY, items: { type: Type.STRING } }
-              }
-            },
-            trendAlerts: {
-              type: Type.OBJECT,
-              properties: {
-                opportunities: { type: Type.ARRAY, items: { type: Type.STRING } },
-                saturationWarnings: { type: Type.ARRAY, items: { type: Type.STRING } }
+                appliedFramework: { type: Type.STRING },
+                whyUsed: { type: Type.STRING }
               }
             }
           }
@@ -134,26 +112,18 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
     });
 
     const text = response.text;
-    if (!text) throw new Error("Empty response from AI");
+    if (!text) throw new Error("Empty response from VARTA Node.");
     
-    // Extract search grounding metadata
     const sources: { title: string; url: string }[] = [];
     const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
     chunks.forEach((chunk: any) => {
-      if (chunk.web) {
-        sources.push({ title: chunk.web.title || 'Source', url: chunk.web.uri });
-      }
+      if (chunk.web) sources.push({ title: chunk.web.title || 'Live Signal', url: chunk.web.uri });
     });
 
-    const cleanedJson = text.replace(/```json\n?|```/g, "").trim();
-    const parsedData = JSON.parse(cleanedJson);
-    
-    return {
-      ...parsedData,
-      sources
-    };
+    const parsedData = JSON.parse(text);
+    return { ...parsedData, sources };
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
-    throw new Error(error.message || "An unexpected error occurred during intelligence gathering.");
+    if (error.message?.includes('429')) throw new Error("QUOTA_EXHAUSTED: Please establish a private corporate connection.");
+    throw new Error(error.message || "VARTA Intelligence connection failure.");
   }
 };

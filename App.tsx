@@ -18,11 +18,21 @@ const App: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<ViewState>('HOME');
   const [viewedEmployee, setViewedEmployee] = useState<User | null>(null);
+  const [hasOwnKey, setHasOwnKey] = useState(false);
 
   useEffect(() => {
     if (user) {
       storageService.saveUser(user);
     }
+    
+    // Check if user has already selected a private key
+    const checkKey = async () => {
+      if ((window as any).aistudio?.hasSelectedApiKey) {
+        const selected = await (window as any).aistudio.hasSelectedApiKey();
+        setHasOwnKey(selected);
+      }
+    };
+    checkKey();
   }, [user]);
 
   const handleAuth = (loggedInUser: User) => {
@@ -35,6 +45,14 @@ const App: React.FC = () => {
     setReport(null);
     setView('HOME');
     setViewedEmployee(null);
+  };
+
+  const openKeySelection = async () => {
+    if ((window as any).aistudio?.openSelectKey) {
+      await (window as any).aistudio.openSelectKey();
+      setHasOwnKey(true);
+      setError(null);
+    }
   };
 
   const handleAnalyze = async (input: AdAnalysisInput) => {
@@ -57,7 +75,7 @@ const App: React.FC = () => {
       
     } catch (err: any) {
       console.error(err);
-      setError(err.message || "Failed to generate report. Please try again.");
+      setError(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -94,14 +112,18 @@ const App: React.FC = () => {
             user={user} 
             isOwnProfile={true}
             onViewReport={viewReport} 
-            onBack={() => setView('HOME')} 
+            onBack={() => setView('HOME')}
+            onSelectKey={openKeySelection}
+            hasOwnKey={hasOwnKey}
           />
         ) : view === 'EMPLOYEE_PROFILE' && viewedEmployee ? (
           <Profile 
             user={viewedEmployee} 
             isOwnProfile={viewedEmployee.email === user.email}
             onViewReport={viewReport} 
-            onBack={() => setView('DIRECTORY')} 
+            onBack={() => setView('DIRECTORY')}
+            onSelectKey={openKeySelection}
+            hasOwnKey={hasOwnKey}
           />
         ) : view === 'DIRECTORY' ? (
           <EmployeeDirectory onSelectEmployee={handleViewEmployee} />
@@ -121,8 +143,23 @@ const App: React.FC = () => {
             <InputSection onAnalyze={handleAnalyze} isLoading={isLoading} />
 
             {error && (
-              <div className="mt-8 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-center animate-pulse">
-                {error}
+              <div className="mt-8 p-6 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex flex-col items-center gap-4 animate-in zoom-in-95 duration-300">
+                <div className="text-rose-400 text-center font-medium">
+                  {error.includes('QUOTA_EXHAUSTED') ? (
+                    <>
+                      <p className="font-bold text-lg mb-1">Intelligence Node Overloaded</p>
+                      <p className="text-sm opacity-80">The system is currently handling high volume. Please establish a private corporate connection.</p>
+                    </>
+                  ) : error}
+                </div>
+                {error.includes('QUOTA_EXHAUSTED') && (
+                  <button 
+                    onClick={openKeySelection}
+                    className="px-6 py-2.5 bg-rose-500 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/20"
+                  >
+                    Select Corporate API Key
+                  </button>
+                )}
               </div>
             )}
 
