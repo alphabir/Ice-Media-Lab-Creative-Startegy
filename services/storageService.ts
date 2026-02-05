@@ -5,7 +5,7 @@ const CURRENT_USER_KEY = 'icemedia_active_session';
 
 export const storageService = {
   /**
-   * Retrieves all user entries from the organization database.
+   * Retrieves all user entries from the organizational database.
    */
   getAllUsers: (): User[] => {
     const data = localStorage.getItem(USERS_KEY);
@@ -13,7 +13,7 @@ export const storageService = {
   },
 
   /**
-   * Adds a new user record to the organization database.
+   * Adds a new user record to the organizational database.
    */
   addUser: (user: User) => {
     const users = storageService.getAllUsers();
@@ -22,7 +22,7 @@ export const storageService = {
   },
 
   /**
-   * Updates an existing user record in the organization database.
+   * Updates an existing user record and synchronizes the active session if necessary.
    */
   updateUser: (user: User) => {
     const users = storageService.getAllUsers();
@@ -61,7 +61,7 @@ export const storageService = {
   },
 
   /**
-   * Authenticates a user by email and creates a local session.
+   * Authenticates a user by email and establishes a local session.
    */
   login: (email: string): User | null => {
     const users = storageService.getAllUsers();
@@ -74,14 +74,14 @@ export const storageService = {
   },
 
   /**
-   * Clears the current session.
+   * Terminates the active session.
    */
   logout: () => {
     localStorage.removeItem(CURRENT_USER_KEY);
   },
 
   /**
-   * Appends an intelligence report to a specific user's history.
+   * Appends a new intelligence report to a specific user's historical record.
    */
   addReportToUser: (userEmail: string, report: AdIntelligenceReport) => {
     const users = storageService.getAllUsers();

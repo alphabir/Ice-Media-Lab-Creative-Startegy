@@ -1,4 +1,3 @@
-
 export interface AdAnalysisInput {
   keyword: string;
   region: string;
@@ -15,6 +14,22 @@ export interface DemographicRow {
   purchaseTrigger: string;
 }
 
+export interface CompetitorInsight {
+  brandName: string;
+  marketShare: string;
+  primaryStrategy: string;
+  winningCreativeStyle: string;
+  estimatedAOV: string;
+}
+
+export interface CampaignPattern {
+  platform: string;
+  format: string;
+  hookType: string;
+  performanceRating: 'High' | 'Medium' | 'Low';
+  reasoning: string;
+}
+
 export interface AdIntelligenceReport {
   id: string;
   timestamp: number;
@@ -29,6 +44,8 @@ export interface AdIntelligenceReport {
     scenarios: string[];
   };
   demographics: DemographicRow[];
+  competitors: CompetitorInsight[];
+  performingCampaigns: CampaignPattern[];
   creativePatterns: {
     topHooks: string[];
     visualStyles: string;
@@ -53,6 +70,7 @@ export interface AdIntelligenceReport {
     opportunities: string[];
     saturationWarnings: string[];
   };
+  sources?: { title: string; url: string }[];
 }
 
 export interface User {

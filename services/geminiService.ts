@@ -6,7 +6,7 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
   const apiKey = process.env.API_KEY;
   
   if (!apiKey || apiKey === 'undefined') {
-    throw new Error("API Key is missing. Please ensure the API_KEY environment variable is set in Vercel.");
+    throw new Error("API Key is missing. Please ensure the API_KEY environment variable is set.");
   }
 
   const ai = new GoogleGenAI({ apiKey });
@@ -17,6 +17,7 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
       contents: [{ parts: [{ text: REPORT_PROMPT(input) }] }],
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
+        tools: [{ googleSearch: {} }],
         responseMimeType: "application/json",
         responseSchema: {
           type: Type.OBJECT,
@@ -49,6 +50,32 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
                   language: { type: Type.STRING },
                   culturalTone: { type: Type.STRING },
                   purchaseTrigger: { type: Type.STRING }
+                }
+              }
+            },
+            competitors: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  brandName: { type: Type.STRING },
+                  marketShare: { type: Type.STRING },
+                  primaryStrategy: { type: Type.STRING },
+                  winningCreativeStyle: { type: Type.STRING },
+                  estimatedAOV: { type: Type.STRING }
+                }
+              }
+            },
+            performingCampaigns: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  platform: { type: Type.STRING },
+                  format: { type: Type.STRING },
+                  hookType: { type: Type.STRING },
+                  performanceRating: { type: Type.STRING },
+                  reasoning: { type: Type.STRING }
                 }
               }
             },
@@ -109,14 +136,24 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
     const text = response.text;
     if (!text) throw new Error("Empty response from AI");
     
-    // Safety check for common AI output quirks (markdown blocks)
+    // Extract search grounding metadata
+    const sources: { title: string; url: string }[] = [];
+    const chunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+    chunks.forEach((chunk: any) => {
+      if (chunk.web) {
+        sources.push({ title: chunk.web.title || 'Source', url: chunk.web.uri });
+      }
+    });
+
     const cleanedJson = text.replace(/```json\n?|```/g, "").trim();
-    return JSON.parse(cleanedJson);
+    const parsedData = JSON.parse(cleanedJson);
+    
+    return {
+      ...parsedData,
+      sources
+    };
   } catch (error: any) {
     console.error("Gemini API Error:", error);
-    if (error?.message?.includes('403')) {
-      throw new Error("Access denied. Please check if your API Key is valid and has billing enabled.");
-    }
-    throw new Error(error.message || "An unexpected error occurred during analysis.");
+    throw new Error(error.message || "An unexpected error occurred during intelligence gathering.");
   }
 };
