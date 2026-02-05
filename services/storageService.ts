@@ -1,8 +1,7 @@
-
 import { User, AdIntelligenceReport } from '../types';
 
-const USERS_KEY = 'varta_org_users';
-const CURRENT_USER_KEY = 'varta_active_session';
+const USERS_KEY = 'icemedia_org_users';
+const CURRENT_USER_KEY = 'icemedia_active_session';
 
 export const storageService = {
   getUsers: (): User[] => {
@@ -19,6 +18,7 @@ export const storageService = {
       users.push(user);
     }
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    
     // Also update active session if it's the same user
     const current = storageService.getCurrentUser();
     if (current && current.email === user.email) {
