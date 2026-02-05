@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AdIntelligenceReport } from '../types';
 
@@ -37,7 +36,7 @@ const ReportDashboard: React.FC<ReportDashboardProps> = ({ report }) => {
       {/* 0. Strategic Rationale */}
       <section className="bg-gradient-to-r from-slate-900 to-slate-800 border-l-4 border-[#f6b21b] p-8 rounded-r-3xl shadow-2xl">
         <div className="flex items-center gap-4 mb-3">
-          <Badge color="orange">VARTA Protocol Engine</Badge>
+          <Badge color="orange">IceMediaLabs Protocol Engine</Badge>
           <h2 className="text-2xl font-black text-white">{frameworkAnalysis?.appliedFramework || 'Custom Framework'}</h2>
         </div>
         <p className="text-slate-300 leading-relaxed italic opacity-80">
@@ -285,7 +284,7 @@ const ReportDashboard: React.FC<ReportDashboardProps> = ({ report }) => {
       {/* Verification */}
       {sources?.length > 0 && (
         <section className="pt-12 border-t border-slate-800">
-          <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-8 text-center">Data Intelligence Sources Used</p>
+          <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-8 text-center">IceMediaLabs Intelligence Verification</p>
           <div className="flex flex-wrap justify-center gap-4">
             {sources.map((src, i) => (
               <a key={i} href={src.url} target="_blank" rel="noopener noreferrer" className="px-5 py-2.5 bg-slate-900 border border-slate-800 rounded-2xl text-[10px] text-cyan-500 hover:text-white hover:border-cyan-500 transition-all font-bold uppercase tracking-widest">

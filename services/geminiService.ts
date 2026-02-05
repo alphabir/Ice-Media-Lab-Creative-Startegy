@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { AdAnalysisInput, AdIntelligenceReport } from "../types";
 import { SYSTEM_INSTRUCTION, REPORT_PROMPT } from "../constants";
@@ -6,10 +5,10 @@ import { SYSTEM_INSTRUCTION, REPORT_PROMPT } from "../constants";
 export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<AdIntelligenceReport> => {
   const apiKey = process.env.API_KEY;
   if (!apiKey || apiKey === 'undefined') {
-    throw new Error("VARTA CRITICAL: No API key detected. Connect corporate credentials.");
+    throw new Error("IML CRITICAL: No corporate API key detected. Analysis blocked.");
   }
 
-  // Use Gemini 3 Pro for complex strategy tasks to ensure depth and reasoning
+  // Use Gemini 3 Pro with max thinking budget for exhaustive strategic depth
   const ai = new GoogleGenAI({ apiKey });
   
   try {
@@ -20,8 +19,7 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }],
         thinkingConfig: {
-          // Max budget for 3-pro to ensure it plans the full 9-point report before generating
-          thinkingBudget: 32768 
+          thinkingBudget: 32768 // Force maximum pre-generation reasoning for complete detail
         },
         responseMimeType: "application/json",
         responseSchema: {
@@ -35,9 +33,9 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
             marketIntelligence: {
               type: Type.OBJECT,
               properties: {
-                industryInsights: { type: Type.STRING },
-                demandPatterns: { type: Type.STRING },
-                winningFormats: { type: Type.ARRAY, items: { type: Type.STRING } }
+                industryInsights: { type: Type.STRING, description: "Detailed industry landscape with 2024 trends." },
+                demandPatterns: { type: Type.STRING, description: "Analysis of consumer purchasing cycles." },
+                winningFormats: { type: Type.ARRAY, items: { type: Type.STRING }, description: "Specific ad formats that are scaling now." }
               }
             },
             audiencePsychology: {
@@ -125,8 +123,9 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
     });
 
     const text = response.text;
-    if (!text) throw new Error("VARTA SIGNAL LOST: The intelligence node failed to respond. Check keyword safety.");
+    if (!text) throw new Error("IML SIGNAL LOST: No intelligence returned from node.");
     
+    // Defensive extraction
     const jsonStr = text.replace(/```json\n?|```/g, "").trim();
     const parsedData = JSON.parse(jsonStr);
 
@@ -138,10 +137,10 @@ export const generateAdIntelligence = async (input: AdAnalysisInput): Promise<Ad
 
     return { ...parsedData, sources };
   } catch (error: any) {
-    console.error("VARTA_CORE_ERROR:", error);
+    console.error("IML_CORE_ERROR:", error);
     if (error.message?.includes('429')) {
-      throw new Error("NODE_OVERLOAD: Too many concurrent strategy requests. Link a paid API key to bypass.");
+      throw new Error("NODE_OVERLOAD: Rate limit hit. Connect corporate API key for priority lane.");
     }
-    throw new Error(error.message || "VARTA Connection Failure.");
+    throw new Error(error.message || "Intelligence Connection Failure.");
   }
 };
